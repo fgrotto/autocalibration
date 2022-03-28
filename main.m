@@ -5,6 +5,7 @@ warning('off','all')
 addpath("./src");
 load('dataset/autocalib.mat');
 
+%% Autocalibration from Computer Vision Toolbox and medonca-cipolla method
 % initial K approximation
 K_approx = A;
 disp('Initial K approximation: ')
@@ -23,3 +24,16 @@ disp(K);
 
 disp('Estimated internal camera parameters (Autocalibration Toolbox): ');
 disp(autocal(Fs,K_approx));
+
+%% Practical Autocalibration (Riccardo Gherardi and Andrea Fusiello)
+
+[best_H, best_focal_length, best_cost] = practical_autocal(1,10,PPM);
+
+disp('Best H');
+disp(best_H);
+
+disp('Best focal length');
+disp(best_focal_length);
+
+disp('Best cost');
+disp(best_cost);
