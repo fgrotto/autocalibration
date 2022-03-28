@@ -1,0 +1,10 @@
+*.slxc
+slprj/*
+*slprj/*
+*.aux
+*.log
+*.gz
+*.toc
+*.asv
+*.fls
+*.fdb_latexmk
