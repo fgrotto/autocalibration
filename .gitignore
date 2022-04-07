@@ -10,3 +10,4 @@ slprj/*
 *.fdb_latexmk
 Autocal/*
 CameraPose/*
+dataset/zephyr_dante/*
