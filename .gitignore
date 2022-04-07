@@ -8,3 +8,5 @@ slprj/*
 *.asv
 *.fls
 *.fdb_latexmk
+Autocal/*
+CameraPose/*
