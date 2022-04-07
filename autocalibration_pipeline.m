@@ -7,12 +7,28 @@ load S.mat;
 n_views = size(S);
 for i = 1:5
     for j = 1:5
+       if i == j 
+           continue
+       end
        I_left = [directory S{i,j}.name_view_i];
        I_right = [directory S{i,j}.name_view_j];
        
-       if (size(S{i,j}.uv_i,1) > 10) && (size(S{i,j}.uv_j,1) > 10)
-           leftP = [S{i,j}.uv_i(1:10) S{i,j}.vv_i(1:10)]';
-           rightP = [S{i,j}.uv_j(1:10) S{i,j}.vv_j(1:10)]';
+%        G = [S{i,j}.R_i S{i,j}.t_i; 0 0 0 1];
+%        P1 = S{i,j}.K_i * [1 0 0 0
+%                 0 1 0 0
+%                 0 0 1 0] * G;
+%             
+%        G = [S{i,j}.R_j S{i,j}.t_j; 0 0 0 1];
+%        P2 = S{i,j}.K_j * [1 0 0 0
+%                 0 1 0 0
+%                 0 0 1 0] * G;
+%        
+%        X = triang(P1,P2, [S{i,j}.uv_i(1:1) S{i,j}.vv_i(1:1)]', [S{i,j}.uv_j(1:1) S{i,j}.vv_j(1:1)]')
+%        S{1,2}.points(1,:)
+
+       if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
+           leftP = [S{i,j}.uv_i(1:50) S{i,j}.vv_i(1:50)]';
+           rightP = [S{i,j}.uv_j(1:50) S{i,j}.vv_j(1:50)]';
 
            F = fundamental_matrix(I_left, I_right, leftP, rightP);
            Fs(:,:,i,j) = F;
