@@ -1,6 +1,5 @@
 function F = fund_lin(m2,m1,w)
-%FUND_LIN  Fundamental matrix with 8-points algorithm
-    
+    %FUND_LIN  Fundamental matrix with 8-points algorithm
     if nargin < 3 || isempty(w)
         w = ones(size(m1,2),1);  % weights
     end
@@ -16,8 +15,7 @@ function F = fund_lin(m2,m1,w)
     
     % enforce singularity of  F
     [U,D,V] = svd(F);
-    D(3,3) = 0; F = U *D*V';
-    
+    D(3,3) = 0; F = U*D*V'; 
 end
 
 

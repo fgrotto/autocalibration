@@ -8,7 +8,6 @@ Assumptions: all the images have the same internal parameters K
 - [ ] Use the script provided in the autocal internal_driver to get an estimation of K. We call it K0
 - [ ] Use autocalibration procedure medonca-cipolla to start and get the estimated K
 - [ ] From the estimated K compare it with the real K (the one used in pose_driver.m to map 3d to the image pixels (u,v)
-- [ ] From the estimated K compute R|t relative to each pair of image (i,j). So we will have the rotation R and translation t of j wrt of i.
 - [ ] By triangulation using ppm (with K,R,t estimated) project the 2d points to 3d and get a cloud of points.
 - [ ] Register the cloud of points with ICP to compare it with the original (basically the problem is that all the estimated R|t are of j wrt of i not the same reference frame as the original cloud point but we can move everthing to i or by concatenation)
 

@@ -5,11 +5,11 @@ function F = fundamental_matrix(I_left, I_right, left_P, right_P)
   F=F_out;
   
 %   figure(1);
-%     imshow(I_left);
-%     figure(2);
-%     imshow(I_right);
-
-  %Draw epipolar lines:
+%   imshow(I_left);
+%   figure(2);
+%   imshow(I_right);
+% 
+%   %Draw epipolar lines:
 %   disp('Draw 3 epipolar lines: ');
 %   [m n c] = size(I_left);
 %   list =['c' 'b' 'g'];

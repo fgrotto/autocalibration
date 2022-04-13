@@ -10,4 +10,5 @@ slprj/*
 *.fdb_latexmk
 Autocal/*
 CameraPose/*
+ComputerVisionToolkit/*
 dataset/zephyr_dante/*
