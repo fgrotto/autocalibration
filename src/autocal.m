@@ -12,8 +12,8 @@ end
 function [res,J]  = fobj(a,F)
     
     J =[]; res=[];
-    for i=1:size(F,1)
-        for j=1:size(F,2)
+    for i=1:size(F,3)
+        for j=1:size(F,4)
             if ~isempty(F(:,:,i,j))
                 [r, D] = jacobianHF(a,F(:,:,i,j));
                 res = [res; r];

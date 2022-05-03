@@ -9,6 +9,7 @@ slprj/*
 *.fls
 *.fdb_latexmk
 Autocal/*
+cv/*
 CameraPose/*
 ComputerVisionToolkit/*
 dataset/zephyr_dante/*

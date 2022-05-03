@@ -21,18 +21,20 @@ function C = cost_medonca_cipolla(F, X)
 
     for i = 1:size(F,3)-1
         for j = i+1:size(F,3)
-            % Essential matrix from fundamental matrix
-            E = K' * F(:,:,i,j) * K;
+            if ~isempty(F(:,:,i,j))
+                % Essential matrix from fundamental matrix
+                E = K' * F(:,:,i,j) * K;
 
-            % SVD of essential matrix
-            [~,D,~] = svd(E);
+                % SVD of essential matrix
+                [~,D,~] = svd(E);
 
-            % Non zero singular values of 
-            sigma1 = D(1,1);
-            sigma2 = D(2,2);
+                % Non zero singular values of 
+                sigma1 = D(1,1);
+                sigma2 = D(2,2);
 
-            C1 = 1/Den * (sigma1 - sigma2)/sigma2;
-            C = [C C1];
+                C1 = 1/Den * (sigma1 - sigma2)/sigma2;
+                C = [C C1];
+            end
         end
     end
 end

@@ -8,7 +8,19 @@ function F = fundamental_matrix(I_left, I_right, left_P, right_P)
 %   imshow(I_left);
 %   figure(2);
 %   imshow(I_right);
+  
+  % project points in the two images to see if they make sense
+%   for i = 1:size(left_P,2)
+%       figure(1); 
+%       hold on;
+%       plot(left_P(1,i),left_P(2,i),'r*');
 % 
+%       figure(2);
+%       hold on;
+%       plot(right_P(1,i),right_P(2,i),'r*');
+%       disp('Done');
+%   end
+  
 %   %Draw epipolar lines:
 %   disp('Draw 3 epipolar lines: ');
 %   [m n c] = size(I_left);
