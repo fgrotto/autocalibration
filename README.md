@@ -11,8 +11,8 @@ Assumptions: all the images have the same internal parameters K
 - [ ] By triangulation using ppm (with K,R,t estimated) project the 2d points to 3d and get a cloud of points.
 - [ ] Register the cloud of points with ICP to compare it with the original (basically the problem is that all the estimated R|t are of j wrt of i not the same reference frame as the original cloud point but we can move everthing to i or by concatenation)
 
-Suggestions:
-- Compute F fundamental matrix on images with sufficient overlap (take 10 points).
-- Autocalibration uses the fundamental matrixes computed, see if we need to get all of them.
-- Maybe consider outliners with RANSAC (the prof didn't mention it but maybe we can check it).
-- Maybe consider other autocalibration procedures.
+Things to check:
+
+- [ ] Check corrisponding points and epipolar lines (fundamental matrix function)
+- [ ] Check rotation and translation out of relative lin and use toolbox performance indexes
+- [ ] Check triang_lin_batch with performance and project points to check it

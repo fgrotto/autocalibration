@@ -9,7 +9,7 @@ n_views = size(S,1);
 % Consider only this number of points per image
 num_points = 30;
 % Consider only a limited number of pair of images
-image_indexes = randi(n_views,20,1);
+image_indexes = randi(n_views,20,1); % TODO maybe 1:1:20
 
 % Compute fundantal matrixes considering the provided indexes and
 % the number of points for each pair of images
@@ -42,6 +42,7 @@ for i = 1:1
 end
 
 
+% Plot points with the mesh
 % figure(3)
 % [Tri,Pts] = plyread([directory 'Mesh.ply'],'tri');
 % trisurf(Tri,Pts(:,1),Pts(:,2),Pts(:,3)); 
@@ -72,7 +73,7 @@ S{1,1}.t_new = [0;0;0];
 % Problem in case of missing steps we can't get the correct points from
 % view 1, esample missing 1-8 will prevent to build 8-i views
 for i = 1:1
-    for j = (i+1):2
+    for j = (i+1):3
         S{i,j}.R_new = S{1, i}.R_ji * S{i,j}.R_ji;
         S{i,j}.t_new = S{1, i}.R_ji * S{i,j}.t_ji + S{1, i}.t_ji;
         
@@ -90,7 +91,6 @@ for i = 1:1
        end
     end
 end
-
 
 % Get two clouds of points
 cloud_points1 = Points;
