@@ -4,6 +4,8 @@ addpath("./src");
 directory = './dataset/zephyr_dante/';
 load S.mat;
 
+normF = @(x) norm(x,'fro');
+
 % Extract dimension of dataset
 n_views = size(S,1);
 % Consider only this number of points per image
@@ -36,8 +38,10 @@ disp(K_cipolla_toolbox);
 %Project original points
 Points = [];
 for i = 1:1
-    for j = (i+1):2
-        Points = [Points; S{i,j}.points];
+    for j = (i+1):3
+        if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
+            Points = [Points; S{i,j}.points];
+        end
     end
 end
 
@@ -56,10 +60,34 @@ for i = 1:5
        if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
            leftP = [S{i,j}.uv_i(1:50) S{i,j}.vv_i(1:50)]';
            rightP = [S{i,j}.uv_j(1:50) S{i,j}.vv_j(1:50)]';
+           
+           G1 = [S{i,j}.R_i S{1,i}.t_i; 0 0 0 1];
+           G2 = [S{i,j}.R_j S{i,j}.t_j; 0 0 0 1];
+           G21 = G2*inv(G1);
+           
            [R21,t21] = relative_lin(rightP, leftP, K_cipolla, K_cipolla);
+           fprintf('Relative linear SO3 error:\t %0.5g \n', normF(R21 - G21(1:3,1:3)));
            [R21,t21] = relative_nonlin(R21, t21, rightP, leftP, K_cipolla, K_cipolla);
+           fprintf('Relative nonlin SO3 errror:\t %0.5g \n',  normF(R21 - G21(1:3,1:3) ));
+           if normF(R21 - G21(1:3,1:3)) > 1
+               continue
+           end
            S{i,j}.R_ji = R21;
            S{i,j}.t_ji = t21;
+           
+           x1 = leftP;
+           x2 = rightP;
+           X_model = triang_lin_batch({K_cipolla*[eye(3),zeros(3,1)], K_cipolla*[R21,t21]}, {x1,x2});
+           X = S{i,j}.points(1:50,:)';
+           
+           [R,t,s] = opa(X(:,1:6),X_model(:,1:6));
+           X_obj = s*(R*X_model + t*ones(1,size(X,2)));
+           fprintf('Relative triang error:\t\t %0.5g \n',  rmse(X(:)-X_obj(:)));
+
+           figure;
+           plot3(X(1,:), X(2,:), X(3,:), 'or'); hold on
+           plot3(X_obj(1,:), X_obj(2,:), X_obj(3,:),'+b');
+           title('Relative orientation')
        end
     end
 end
@@ -86,15 +114,29 @@ for i = 1:1
        if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
            leftP = [S{i,j}.uv_i(:) S{i,j}.vv_i(:)]';
            rightP = [S{i,j}.uv_j(:) S{i,j}.vv_j(:)]';
-           X = triang_lin_batch({P1, P2}, {leftP ,rightP});
-           MyPoints = [MyPoints; X'];
+           
+           x1 = leftP;
+           x2 = rightP;
+           X_model = triang_lin_batch({P1, P2}, {leftP ,rightP});
+           X = S{i,j}.points';
+           
+           [R,t,s] = opa(X(:,1:6),X_model(:,1:6));
+           X_obj = s*(R*X_model + t*ones(1,size(X,2)));
+           fprintf('Relative triang error:\t\t %0.5g \n',  rmse(X(:)-X_obj(:)));
+
+           figure;
+           plot3(X(1,:), X(2,:), X(3,:), 'or'); hold on
+           plot3(X_obj(1,:), X_obj(2,:), X_obj(3,:),'+b');
+           title('Relative orientation')
+           
+           MyPoints = [MyPoints X_obj];
        end
     end
 end
 
 % Get two clouds of points
 cloud_points1 = Points;
-cloud_points2 = MyPoints;
+cloud_points2 = MyPoints';
 
 % Apply ICP algorithm and calculate the rigid transformation
 model = cloud_points1;
@@ -104,7 +146,7 @@ datafinal = rigid(Gi,data);
 
 % Display the original mesh, the original 3d points and the estimated
 % points with our procedure
-figure(3)
+figure;
 [Tri,Pts] = plyread([directory 'Mesh.ply'],'tri');
 trisurf(Tri,Pts(:,1),Pts(:,2),Pts(:,3)); 
 colormap(gray); axis equal;
