@@ -30,7 +30,7 @@ function [Fs] = compute_f(S, directory, indexes, num_points)
                rightP = [S{i,j}.uv_j(1:num_points) S{i,j}.vv_j(1:num_points)]';
 
                F = fundamental_matrix(I_left, I_right, leftP, rightP);
-               fprintf('Fundamental nonlin Smps error:\t %0.5g \n', rmse(sampson_fund(F,leftP,rightP)));
+               fprintf('Fundamental nonlin Smps error views (%0.2g, %0.2g):\t %0.5g \n', i,j, rmse(sampson_fund(F,leftP,rightP)));
                Fs(:,:,1,ind) = F;
                ind=ind+1;
            end
