@@ -12,7 +12,7 @@ n_views = size(S,1);
 % Consider only this number of points per image
 num_points = 30;
 % Consider only a limited number of pair of images
-image_indexes = randi(n_views,20,1); % TODO maybe 1:1:20
+image_indexes = 1:1:20; %randi(n_views,20,1);
 
 % Compute fundantal matrixes considering the provided indexes and
 % the number of points for each pair of images
