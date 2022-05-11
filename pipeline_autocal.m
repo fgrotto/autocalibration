@@ -10,14 +10,14 @@ disp('Pipeline for autocalibration starting from S data-structure');
 % Extract dimension of dataset
 n_views = size(S,1);
 % Consider only this number of points per image
-num_points = 30;
+num_points = 50;
 % Consider only a limited number of pair of images
-image_indexes = 1:1:20; %randi(n_views,20,1);
+image_indexes = 1:1:5;
 
-% Compute fundantal matrixes considering the provided indexes and
+% Compute fundamental matrixes considering the provided indexes and
 % the number of points for each pair of images
 disp('Computing fundamental matrices');
-Fs = compute_f(S, directory, image_indexes, num_points);
+[Fs,S] = compute_f(S, directory, image_indexes, num_points);
 
 % Calculate initial estimation of the intrinsic camera parameters
 K0 = compute_k0(S, directory);
@@ -38,7 +38,6 @@ disp('Kruppas method: ');
 disp(K_kruppas);
 disp('Medonca cipolla (Toolbox): ');
 disp(K_cipolla_toolbox);
-
 
 % Project original points and collect them in a proper vector
 Points = [];

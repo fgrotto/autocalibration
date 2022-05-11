@@ -1,4 +1,4 @@
-function [Fs] = compute_f(S, directory, indexes, num_points)
+function [Fs, S] = compute_f(S, directory, indexes, num_points)
     ind = 1;
     for x = 1:length(indexes)
         for y = 1:length(indexes)
@@ -26,15 +26,19 @@ function [Fs] = compute_f(S, directory, indexes, num_points)
            % S{1,2}.points(1,:)
 
            if (size(S{i,j}.uv_i,1) > num_points) && (size(S{i,j}.uv_j,1) > num_points)
-               leftP = [S{i,j}.uv_i(1:num_points) S{i,j}.vv_i(1:num_points)]';
-               rightP = [S{i,j}.uv_j(1:num_points) S{i,j}.vv_j(1:num_points)]';
+               leftP = [S{i,j}.uv_i(:) S{i,j}.vv_i(:)]';
+               rightP = [S{i,j}.uv_j(:) S{i,j}.vv_j(:)]';
 
-               F = fundamental_matrix(I_left, I_right, leftP, rightP);
                [F_expected, ~] = fund(P1,P2);
-               
-               fprintf('Fundamental nonlin Smps error views (%0.2g, %0.2g):\t %0.5g \n', i,j, rmse(sampson_fund(F,leftP,rightP)));
-               Fs(:,:,1,ind) = F;
-               ind=ind+1;
+               [F, left_in, right_in, inliers] = fundamental_matrix(I_left, I_right, leftP, rightP, num_points);
+%                S{i,j}.inliers = inliers;
+%                S{i,j}.left_in = left_in;
+%                S{i,j}.right_in = right_in;
+               fprintf('Fundamental nonlin Smps error views (%0.2g, %0.2g):\t %0.5g \n', i,j, rmse(sampson_fund(F,left_in,right_in)));
+               if (rmse(sampson_fund(F,leftP,rightP)) < 1)
+                   Fs(:,:,1,ind) = F.*1.0e+05;
+                   ind=ind+1;
+               end
            end
         end
     end
