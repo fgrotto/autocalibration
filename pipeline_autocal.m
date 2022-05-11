@@ -5,7 +5,7 @@ directory = './dataset/zephyr_dante/';
 load S.mat;
 
 normF = @(x) norm(x,'fro');
-disp('Pipeline for autocalibration starting from S datastructure');
+disp('Pipeline for autocalibration starting from S data-structure');
 
 % Extract dimension of dataset
 n_views = size(S,1);
@@ -42,7 +42,7 @@ disp(K_cipolla_toolbox);
 
 % Project original points and collect them in a proper vector
 Points = [];
-for i = 1:1
+for i = 1:2
     for j = (i+1):3
         if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
             Points = [Points; S{i,j}.points];
@@ -59,7 +59,7 @@ for i = 1:5
            rightP = [S{i,j}.uv_j(1:50) S{i,j}.vv_j(1:50)]';
            
            % Compute original transformation matrix to get the actual error
-           G1 = [S{i,j}.R_i S{1,i}.t_i; 0 0 0 1];
+           G1 = [S{i,j}.R_i S{j,i}.t_i; 0 0 0 1];
            G2 = [S{i,j}.R_j S{i,j}.t_j; 0 0 0 1];
            G21 = G2*inv(G1);
            
@@ -102,17 +102,21 @@ S{1,1}.t_ji = [0;0;0];
 S{1,1}.R_new = eye(3);
 S{1,1}.t_new = [0;0;0];
 
-% Problem in case of missing steps we can't get the correct points from
-% view 1, example missing 1-8 will prevent to build 8-i views
-for i = 1:1
+% Problem in case of missing steps with concatenation we can't get the 
+% correct points from view 1, example missing 1-8 will prevent to build 8-i views
+for i = 1:2
     for j = (i+1):3
-        S{i,j}.R_new = S{1, i}.R_ji * S{i,j}.R_ji;
-        S{i,j}.t_new = S{1, i}.R_ji * S{i,j}.t_ji + S{1, i}.t_ji;
+        % With relative orientation adjustments
+        % S{i,j}.R_new = S{1, i}.R_ji * S{i,j}.R_ji;
+        % S{i,j}.t_new = S{1, i}.R_ji * S{i,j}.t_ji + S{1, i}.t_ji;
+        % G = [S{1,i}.R_new S{1,i}.t_new; 0 0 0 1];
+        % P1 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
+        % G = [S{i,j}.R_new S{i,j}.t_new; 0 0 0 1];
+        % P2 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
         
-        G = [S{1,i}.R_new S{1,i}.t_new; 0 0 0 1];
-        P1 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
-
-        G = [S{i,j}.R_new S{i,j}.t_new; 0 0 0 1];
+        % Apply absolute orientation with opa
+        P1 = K_cipolla*[eye(3),zeros(3,1)];
+        G = [S{i,j}.R_ji S{i,j}.t_ji; 0 0 0 1];
         P2 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
 
        if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
@@ -142,7 +146,6 @@ for i = 1:1
     end
 end
 
-disp('Computing icp with the original model and the obtained points');
 % Get two clouds of points
 cloud_points1 = Points;
 cloud_points2 = MyPoints';
@@ -150,9 +153,12 @@ cloud_points2 = MyPoints';
 % Apply ICP algorithm and calculate the rigid transformation
 model = cloud_points1;
 data = cloud_points2;
-Gi = icp(model,data);
-datafinal = rigid(Gi,data);
+
+% disp('Computing icp with the original model and the obtained points');
+% Gi = icp(model,data);
+% datafinal = rigid(Gi,data);
 disp('Pipeline completed');
+datafinal = data;
 
 % Display the original mesh, the original 3d points and the estimated
 % points with our procedure
