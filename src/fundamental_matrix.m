@@ -6,7 +6,7 @@ function [F, left_in, right_in, inliers] = fundamental_matrix(I_left, I_right, l
     %   F0 = fund_lin(right_P,left_P);
     %   F_out = fund_nonlin(F0, right_P,left_P);
 
-    [F_out, inliers] = estimateFundamentalMatrix(left_P', right_P', 'Method', 'RANSAC', 'NumTrials', 500, 'DistanceThreshold', 1e-4);
+    [F_out, inliers] = estimateFundamentalMatrix(left_P', right_P', 'Method', 'RANSAC', 'NumTrials', 1000, 'DistanceThreshold', 1e-4);
     F = F_out;
 
     matchedPoints1 = left_P';

@@ -29,18 +29,21 @@ K_cipolla_mc = compute_mc(Fs,K0);
 K_kruppas = compute_kruppas(Fs,K0);
 K_cipolla = autocal(Fs,K0);
 
+K = S{1,1}.K_i;
 disp('Estimating intrinsic parameters');
 disp('Original');
-disp(S{1,1}.K_i);
+disp(K);
 disp('Initial estimation');
 disp(K0);
 disp('Medonca cipolla: ');
 disp(K_cipolla_mc);
+fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_cipolla_mc(1,1)-K(1,1))/abs(K(1,1)))
 disp('Kruppas method: ');
 disp(K_kruppas);
+fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_kruppas(1,1)-K(1,1))/abs(K(1,1)))
 disp('Medonca cipolla (Toolbox): ');
 disp(K_cipolla);
-K_cipolla = K0;
+fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_cipolla(1,1)-K(1,1))/abs(K(1,1)))
 
 disp('Computing relative orientations of views');
 for i = 1:5
@@ -82,6 +85,8 @@ for i = 1:5
            plot3(X(1,:), X(2,:), X(3,:), 'or'); hold on
            plot3(X_obj(1,:), X_obj(2,:), X_obj(3,:),'+b');
            title(strcat('Relative orientation views (',num2str(i),',',num2str(j),')'));
+           hold on; legend('model', 'computed');
+           hold on; grid on;
        end
     end
 end
@@ -144,6 +149,8 @@ for i = 1:5
            plot3(X(1,:), X(2,:), X(3,:), 'or'); hold on
            plot3(X_obj(1,:), X_obj(2,:), X_obj(3,:),'+b');
            title(strcat('Relative orientation views (',num2str(i),',',num2str(j),')'));
+           hold on; legend('model', 'computed');
+           hold on; grid on;
            
            MyPoints = [MyPoints X_obj];
        end

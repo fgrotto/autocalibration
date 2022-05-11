@@ -7,17 +7,19 @@ function error = cost_kruppas_method(Fs, k)
     w = K * K';
     error = [];
 
-    for i = 1:size(Fs,3)
-        for j = i+1:size(Fs,4)
-            Kleft = Fs(:,:,i,j) * w * Fs(:,:,i,j)';
-            Kleft = Kleft/norm(Kleft,'fro');
-         
-            Kright = epipole(Fs(:,:,i,j)) * w * epipole(Fs(:,:,i,j))';
-            Kright = Kright/norm(Kright, 'fro');
-            
-            % compute the kruppas error
-            Kdiff = Kleft - Kright;
-            error = [error Kdiff(1,:) Kdiff(2,2:3)] ;
+    for i = 1:size(Fs,1)
+        for j = i+1:size(Fs,2)
+            if ~isempty(Fs{i,j})
+                Kleft = Fs{i,j} * w * Fs{i,j}';
+                Kleft = Kleft/norm(Kleft,'fro');
+
+                Kright = epipole(Fs{i,j}) * w * epipole(Fs{i,j})';
+                Kright = Kright/norm(Kright, 'fro');
+
+                % compute the kruppas error
+                Kdiff = Kleft - Kright;
+                error = [error Kdiff(1,:) Kdiff(2,2:3)];
+            end
         end
     end
 end

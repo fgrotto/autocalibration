@@ -1,5 +1,4 @@
 function [Fs, S] = compute_f(S, directory, indexes, num_points)
-    ind = 1;
     for x = 1:length(indexes)
         for y = 1:length(indexes)
            i = indexes(x);
@@ -35,8 +34,7 @@ function [Fs, S] = compute_f(S, directory, indexes, num_points)
 
                fprintf('Fundamental nonlin Smps error views (%0.2g, %0.2g):\t %0.5g \n', i,j, rmse(sampson_fund(F,left_in,right_in)));
                if (rmse(sampson_fund(F,leftP,rightP)) < 1)
-                   Fs(:,:,1,ind) = F;
-                   ind=ind+1;
+                   Fs{i,j} = F;
                end
            end
         end

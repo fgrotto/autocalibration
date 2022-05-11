@@ -12,10 +12,10 @@ end
 function [res,J]  = fobj(a,F)
     
     J =[]; res=[];
-    for i=1:size(F,3)
-        for j=(i+1):size(F,4)
-            if ~isempty(F(:,:,i,j))
-                [r, D] = jacobianHF(a,F(:,:,i,j));
+    for i=1:size(F,1)
+        for j=1:size(F,2)
+            if ~isempty(F{i,j})
+                [r, D] = jacobianHF(a,F{i,j});
                 res = [res; r];
                 J = [J; D];
             end
@@ -26,7 +26,7 @@ end
 
 function [r,J] = jacobianHF(k,F)
 %JACOBIANHF  Jacobian of the Huang-Faugeras residual
-
+       
     K3 = commutation(3,3);    
     [K,JK] = par2K(k);
     

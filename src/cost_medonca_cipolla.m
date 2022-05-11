@@ -13,17 +13,17 @@ function C = cost_medonca_cipolla(F, X)
     C = [];
     
     % Obtain the number of images
-    n = size(F,4);
+    n = size(F,1)*size(F,2);
     
     % By matching points pairwise it is possible to find
     % n(n-1)/2 fundamental matrixes
     Den = n*(n-1)/2;
 
-    for i = 1:size(F,3)
-        for j = (i+1):size(F,4)
-            if ~isempty(F(:,:,i,j))
+    for i = 1:size(F,1)
+        for j = (i+1):size(F,2)
+            if ~isempty(F{i,j})
                 % Essential matrix from fundamental matrix
-                E = K' * F(:,:,i,j) * K;
+                E = K' * F{i,j} * K;
 
                 % SVD of essential matrix
                 [~,D,~] = svd(E);
