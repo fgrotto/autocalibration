@@ -31,12 +31,11 @@ function [Fs, S] = compute_f(S, directory, indexes, num_points)
 
                [F_expected, ~] = fund(P1,P2);
                [F, left_in, right_in, inliers] = fundamental_matrix(I_left, I_right, leftP, rightP, num_points);
-%                S{i,j}.inliers = inliers;
-%                S{i,j}.left_in = left_in;
-%                S{i,j}.right_in = right_in;
+               S{i,j}.inliers = inliers;
+
                fprintf('Fundamental nonlin Smps error views (%0.2g, %0.2g):\t %0.5g \n', i,j, rmse(sampson_fund(F,left_in,right_in)));
                if (rmse(sampson_fund(F,leftP,rightP)) < 1)
-                   Fs(:,:,1,ind) = F.*1.0e+05;
+                   Fs(:,:,1,ind) = F;
                    ind=ind+1;
                end
            end

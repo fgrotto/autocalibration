@@ -20,7 +20,7 @@ function C = cost_medonca_cipolla(F, X)
     Den = n*(n-1)/2;
 
     for i = 1:size(F,3)
-        for j = 1:size(F,4)
+        for j = (i+1):size(F,4)
             if ~isempty(F(:,:,i,j))
                 % Essential matrix from fundamental matrix
                 E = K' * F(:,:,i,j) * K;
