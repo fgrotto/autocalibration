@@ -38,5 +38,5 @@ function [cost] = cost_medonca_cipolla(F, X)
         end
     end
     
-    cost = mean(C);
+    cost = sum(C);
 end

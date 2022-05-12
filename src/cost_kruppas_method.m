@@ -22,6 +22,6 @@ function [cost] = cost_kruppas_method(Fs, k)
             end
         end
     end
-    cost = mean(error);
+    cost = sum(error);
 end
 
