@@ -1,4 +1,4 @@
-function error = cost_kruppas_method(Fs, k)
+function [cost] = cost_kruppas_method(Fs, k)
     % Compute kruppas method by passing Fs the fundamental matrixes and x
     % and initial estimation of the intrinsic parameters (in vector form)
     % to allow the calculation to converge to the correct value.
@@ -6,7 +6,7 @@ function error = cost_kruppas_method(Fs, k)
 
     w = K * K';
     error = [];
-
+    
     for i = 1:size(Fs,1)
         for j = i+1:size(Fs,2)
             if ~isempty(Fs{i,j})
@@ -22,5 +22,6 @@ function error = cost_kruppas_method(Fs, k)
             end
         end
     end
+    cost = mean(error);
 end
 

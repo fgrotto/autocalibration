@@ -1,18 +1,3 @@
-# Simple Autocalibration Procedure
+# Minimal Autocalibration Pipeline
 
-Assumptions: all the images have the same internal parameters K
-
- Steps to perform:
-- [ ] Prepare the data structure (nodes for pair of images i,j with 3D point and (u,v) in the images called corrispondence points). Use the script pose_driver.m provided 
-- [ ] Then we can compute F (fundamental matrix) with 8 points algorithm (implemented in the toolbox) by using points from left and right image in both direction
-- [ ] Use the script provided in the autocal internal_driver to get an estimation of K. We call it K0
-- [ ] Use autocalibration procedure medonca-cipolla to start and get the estimated K
-- [ ] From the estimated K compare it with the real K (the one used in pose_driver.m to map 3d to the image pixels (u,v)
-- [ ] By triangulation using ppm (with K,R,t estimated) project the 2d points to 3d and get a cloud of points.
-- [ ] Register the cloud of points with ICP to compare it with the original (basically the problem is that all the estimated R|t are of j wrt of i not the same reference frame as the original cloud point but we can move everthing to i or by concatenation)
-
-Things to check:
-
-- [ ] Check corrisponding points and epipolar lines (fundamental matrix function)
-- [ ] Check rotation and translation out of relative lin and use toolbox performance indexes
-- [ ] Check triang_lin_batch with performance and project points to check it
+The main idea of this project is to present a minimal pipeline to estimate intrinsic camera parameters using auto-calibration methods We will assume known corresponding points and an initial estimation of the intrinsic camera parameters. The entire pipeline is based on the dataset provided by Zephyr, in particular, we used 3DFlow Dante dataset. A detailed reference is provided in the `doc` folder.

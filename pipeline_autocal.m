@@ -184,3 +184,4 @@ plot3(datafinal(:,1), datafinal(:,2), datafinal(:,3), '.r');
 hold on
 grid on
 axis equal
+hold on; legend('mesh', 'model', 'computed');

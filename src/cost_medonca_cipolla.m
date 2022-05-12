@@ -1,10 +1,10 @@
-function C = cost_medonca_cipolla(F, X)
+function [cost] = cost_medonca_cipolla(F, X)
     %   Inputs
     %       F - Fundamenta matrixes given images
     %       X - Initial estimation of instrinsic camera parameters (vector
     %       form)
     %   Output
-    %       E - Computed Cost
+    %       C - Computed Cost
     
     % Get initial K estimation
     K = [X(1) X(2) X(3); 0 X(4) X(5); 0 0 1];
@@ -37,4 +37,6 @@ function C = cost_medonca_cipolla(F, X)
             end
         end
     end
+    
+    cost = mean(C);
 end

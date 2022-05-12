@@ -18,7 +18,7 @@ function [x,J]  = lsq_nonlin(res,x0, varargin)
     % lambda = 0 is Gauss-Newton
     % lambda > 0 is Levenberg-Marquardt (default)
     
-    if true % ~license('test','optimization_toolbox')
+    if false % ~license('test','optimization_toolbox')
         % use this replacement for lsqnonlin
         
         % initialization
@@ -106,7 +106,7 @@ function [x,J]  = lsq_nonlin(res,x0, varargin)
         options = optimoptions('lsqnonlin','Algorithm','levenberg-marquardt',...
             'SpecifyObjectiveGradient',true,'MaxIterations',MaxIterations,...
             'StepTolerance', StepTol, 'FunctionTolerance', FunctionTol,...
-            'CheckGradients',true, 'Display','off', 'FiniteDifferenceType','central');
+            'Display','off', 'FiniteDifferenceType','central');
         
         [x,~,~,~,~,~,J] = lsqnonlin(res,x0(:),[],[],options);
     end
