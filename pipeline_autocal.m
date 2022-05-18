@@ -17,7 +17,7 @@ image_indexes = 1:1:10;
 % Compute fundamental matrixes considering the provided indexes and
 % the number of points for each pair of images
 disp('Computing fundamental matrices');
-[Fs,S] = compute_f(S, directory, image_indexes, num_points);
+Fs = compute_f(S, directory, image_indexes, num_points);
 
 % Calculate initial estimation of the intrinsic camera parameters
 K0 = compute_k0(S, directory);
@@ -44,14 +44,15 @@ fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_kruppas(1,1)-K(1,1))/
 disp('Medonca cipolla (Toolbox): ');
 disp(K_cipolla);
 fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_cipolla(1,1)-K(1,1))/abs(K(1,1)))
+K_cipolla = K_cipolla_mc;
 
 disp('Computing relative orientations of views');
 for i = 1:5
     for j = (i+1):5
        if (size(S{i,j}.uv_i,1) > 50) && (size(S{i,j}.uv_j,1) > 50)
-           % Get around 50 points per view
-           leftP = [S{i,j}.uv_i(S{i,j}.inliers) S{i,j}.vv_i(S{i,j}.inliers)]';
-           rightP = [S{i,j}.uv_j(S{i,j}.inliers) S{i,j}.vv_j(S{i,j}.inliers)]';
+           % Get at least 50 points per view
+           leftP = [S{i,j}.uv_i(:) S{i,j}.vv_i(:)]';
+           rightP = [S{i,j}.uv_j(:) S{i,j}.vv_j(:)]';
            
            % Compute original transformation matrix to get the actual error
            G1 = [S{i,j}.R_i S{j,i}.t_i; 0 0 0 1];
@@ -73,7 +74,7 @@ for i = 1:5
            x1 = leftP;
            x2 = rightP;
            X_model = triang_lin_batch({K_cipolla*[eye(3),zeros(3,1)], K_cipolla*[R21,t21]}, {x1,x2});
-           X = S{i,j}.points(S{i,j}.inliers,:)';
+           X = S{i,j}.points(:,:)';
            
            % Apply opa to the obtained 3D points and the original ones to
            % recover the actual rotation, translation and scale
@@ -91,37 +92,22 @@ for i = 1:5
     end
 end
 
-
-% Project original points and collect them in a proper vector
+% Project original points of 5 views and collect them in a proper vector
+num_views_final = 5;
 Points = [];
-for i = 1:5
-    for j = (i+1):5
+for i = 1:num_views_final
+    for j = (i+1):num_views_final
         if isfield(S{i,j},'R_ji')
-            Points = [Points; S{i,j}.points(S{i,j}.inliers,:)];
+            Points = [Points; S{i,j}.points(:,:)];
         end
     end
 end
 
-% Concatenate all the points
+% Concatenate all the points use only 5 views
 disp('Computing final points by view concatenation');
 MyPoints = [];
-S{1,1}.R_ji = eye(3);
-S{1,1}.t_ji = [0;0;0];
-S{1,1}.R_new = eye(3);
-S{1,1}.t_new = [0;0;0];
-
-% Problem in case of missing steps with concatenation we can't get the 
-% correct points from view 1, example missing 1-8 will prevent to build 8-i views
-for i = 1:5
-    for j = (i+1):5
-       % With relative orientation adjustments
-       % S{i,j}.R_new = S{1, i}.R_ji * S{i,j}.R_ji;
-       % S{i,j}.t_new = S{1, i}.R_ji * S{i,j}.t_ji + S{1, i}.t_ji;
-       % G = [S{1,i}.R_new S{1,i}.t_new; 0 0 0 1];
-       % P1 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
-       % G = [S{i,j}.R_new S{i,j}.t_new; 0 0 0 1];
-       % P2 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
-        
+for i = 1:num_views_final
+    for j = (i+1):num_views_final
        % Compute only for the views where we have the relative orientation
        if isfield(S{i,j},'R_ji')
             % Apply absolute orientation with opa
@@ -129,14 +115,14 @@ for i = 1:5
             G = [S{i,j}.R_ji S{i,j}.t_ji; 0 0 0 1];
             P2 = K_cipolla * [1 0 0 0; 0 1 0 0; 0 0 1 0] * G;
             
-           leftP = [S{i,j}.uv_i(S{i,j}.inliers) S{i,j}.vv_i(S{i,j}.inliers)]';
-           rightP = [S{i,j}.uv_j(S{i,j}.inliers) S{i,j}.vv_j(S{i,j}.inliers)]';
+           leftP = [S{i,j}.uv_i(:) S{i,j}.vv_i(:)]';
+           rightP = [S{i,j}.uv_j(:) S{i,j}.vv_j(:)]';
            
            % Triangulate the points with the obtained rotation and translation
            x1 = leftP;
            x2 = rightP;
            X_model = triang_lin_batch({P1, P2}, {leftP ,rightP});
-           X = S{i,j}.points(S{i,j}.inliers,:)';
+           X = S{i,j}.points(:,:)';
            
            % Apply opa to the obtained 3D points and the original ones to
            % recover the actual rotation, translation and scale

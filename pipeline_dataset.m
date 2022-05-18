@@ -60,7 +60,13 @@ for i = 1:size(tmp,2)
         name_view_j = tmp{j}.name_view;
         
         % Extract intersection from i,j 3d points defined by row
-        [CommonPoints,ia,ib] = intersect(Xvis_i,Xvis_j,'rows');
+        [CommonPointsOriginal,ia,ib] = intersect(Xvis_i,Xvis_j,'rows');
+        
+        % Extract points close to the centroid
+        CommonPoints = extractPointsUsingCentroid(CommonPointsOriginal, 3);
+        if isempty(CommonPoints)
+           CommonPoints = CommonPointsOriginal;
+        end
         
         % Get points projections to image i
         [uv_i, vv_i, K_i, R_i, t_i] = points_to_image([directory name_view_i(1:end-3) 'xmp'], CommonPoints); 

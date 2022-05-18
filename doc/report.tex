@@ -122,7 +122,7 @@ The main idea is to consider the following cost function for $n$ images:
 \begin{equation}
     C(K_i, i = 1,\dots, n) = \sum_{ij}^{n} \frac{w_{ij} (\sigma_{1ij}-\sigma_{2ij})}{\sum_{kl}^{n}w_{kl} \sigma_{2ij}}
 \end{equation}
-where $\sigma_{1ij}$ and $\sigma_{1ij}$ are the non zero singular values of $K_j^TF_{ij}K_j$ in descending order, considering the fundamental matrix between two images i, j as $F_{ij}$ and the intrinsic parameters $K_j$. The weights $w_{ij}$ are the degree of confidence in the estimation of the fundamental matrix and can be equal to the number of points used in the computation of the fundamental matrix.
+where $\sigma_{1ij}$ and $\sigma_{2ij}$ are the non zero singular values of $K_j^TF_{ij}K_j$ in descending order, considering the fundamental matrix between two images i, j as $F_{ij}$ and the intrinsic parameters $K_j$. The weights $w_{ij}$ are the degree of confidence in the estimation of the fundamental matrix and can be equal to the number of points used in the computation of the fundamental matrix.
 
 \bigskip
 The implementation of this method is provided in \textbf{cost\_medonca\_cipolla.m} and can be used with $lsqnonlin$ or $fmincon$ to solve the related minimization problem. Several parameters has been tested but using the computed fundamental matrices and initial estimation the solver (interior point method) simply confirm the presence of a minimal point as:
@@ -162,7 +162,7 @@ The last calibration method is provided in the Computer Vision Toolbox from Andr
 \end{equation}
 The previous equation is a condition to have one singular value equal to zero for $E$ and two identical non-zero singular values. This condition can be used to build a cost function like:
 \begin{equation}
-    C(K) = \sum_{i=1}^{n} \sum_{j=i+1}^{n} w_{ij} (tr((EE^T))^2 - 2 tr((EE^T)^2))ì2
+    C(K) = \sum_{i=1}^{n} \sum_{j=i+1}^{n} w_{ij} (tr((EE^T))^2 - 2 tr((EE^T)^2))^2
 \end{equation}
 where $E_{ij} = K'F_{ij}K$ and $w_ij$ are the degree of confidence in the estimation of the fundamental matrix. The cost function is minimized with the matlab algorithms like the previous algorithms but the convergence is not guaranteed for each initial value. An example obtained with this procedure is reported:
 \begin{verbatim}
