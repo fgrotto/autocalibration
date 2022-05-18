@@ -178,7 +178,7 @@ The implementation of this method is provided in \textit{cost\_medonca\_cipolla.
 \end{bmatrix}
 \end{equation}
 \subsubsection{Kruppa method autocalibration}
-The second calibration method proposed is Kruppa method that can be found in \cite{Prapitasari14} \cite{Pollefeys}. From the classical Kruppa's equations and cost function can be derived to be solved as a nonlinear least-squares optimization problem:
+The second calibration method proposed is Kruppa method that can be found in \cite{Prapitasari14} \cite{Pollefeys}. From the classical Kruppa's equations, a cost function can be derived to be solved as a nonlinear least-squares optimization problem:
 \begin{equation}
     C(K_i, i = 1,\dots, n) = \sum_{ij}^{n} \norm{\frac{F_{ij}w^{-1}F_{ij}^T}{||F_{ij}w^{-1}F_{ij}^T||} - \frac{[e_{ji}]_xw^{-1}[e_{ji}]^T}{||[e_{ji}]_xw^{-1}[e_{ji}]^T||}}
 \end{equation}
@@ -194,7 +194,7 @@ The implementation of this method is provided in \textit{cost\_kruppas\_method.m
           0  &       0   & 0.0010\\
 \end{bmatrix}
 \end{equation}
-The method was tried as an experiment following the cost function reported in \cite{Pollefeys}. More advanced considerations can be made but they are out of the scope of this report. 
+This method was considered as an experiment following the cost function reported in \cite{Pollefeys}. More advanced considerations can be made but they are out of the scope of this report. 
 \newpage
 \subsubsection{Medonca-Cipolla toolbox}
 The last calibration method is provided in the Computer Vision Toolbox from Andrea Fusiello. The main idea is the following theorem from Huang and Faugeras \cite{Faugeras89}
@@ -205,7 +205,7 @@ The previous equation is a condition to have one singular value equal to zero fo
 \begin{equation}
     C(K_i, i = 1,\dots, n) = \sum_{i=1}^{n} \sum_{j=i+1}^{n} w_{ij} (tr((EE^T))^2 - 2 tr((EE^T)^2))^2
 \end{equation}
-where $E_{ij} = K'F_{ij}K$ and $w_ij$ are the degree of confidence in the estimation of the fundamental matrix. The cost function is minimized with the matlab algorithms like the previous algorithms but the convergence is not guaranteed for each initial value. An example obtained with this procedure is reported with an error of $0.64652\%$:
+where $E_{ij} = K^TF_{ij}K$ and $w_{ij}$ are the degree of confidence in the estimation of the fundamental matrix. The cost function is minimized with the matlab algorithms like the previous algorithms but the convergence is not guaranteed for each initial value. An example obtained with this procedure is reported with an error of $0.64652\%$:
 \begin{equation}
     K = 1000 \begin{bmatrix}
      5.8317  &       0   & 2.7673\\
@@ -220,7 +220,7 @@ As it is visible the auto-calibration algorithms improve the initial estimation 
 
 \newpage
 \subsection{Relative orientation and 3D points evaluation}
-The relative orientation for each pair of images $(i,j)$ is recovered using the estimated $K$ using a linear algorithm and a non-linear refinement. The rotation $R_{ji}$ and translation $t_{ji}$ are saved in the related instance $S\{i,j\}$. To give an idea of the algorithm is to compute the normalized coordinates starting from pixel coordinates, compute the essential matrix using the eight point algorithm and finally use the decomposition of $E$ to obtain the translation and rotation.
+The relative orientation for each pair of images $(i,j)$ is recovered using the estimated $K$ using a linear algorithm and a non-linear refinement. The rotation $R_{ji}$ and translation $t_{ji}$ are saved in the related instance $S\{i,j\}$. To give an idea of the algorithm; firstly, the normalized coordinates starting from pixel coordinates are computed, then we compute the essential matrix using the eight point algorithm and finally using the decomposition of $E$ we obtain the translation and rotation.
 Given $E = UDV^T$ the SVD of E it is possible to compute the following matrices
 \begin{equation}
     [t]_x = S = U(\pm S')U^T \qquad
@@ -251,7 +251,7 @@ Secondly, it is necessary to compute the scale and the translation:
     s = \frac{||\bar{y}||}{||\bar{x}||} \qquad t=\left(\frac{D}{s} - RM\right)
 \end{equation}
 In this way we have computed all the necessary steps. Another possibility, without using the absolute orientation, is to concatenate the relative orientation of each view with respect to the first one, triangulate the points and register them with iterative closest point algorithm. However, the latter approach is not as robust as opa, it is computationally more expensive and it is not always possible to concatenate close views due to missing common points to compute the fundamental matrices.
-In Fig \ref{fig:relative} the results of relative orientations and orthogonal procrustes analysis are reported to consolidate the results obtained. In Fig \ref{fig:statue} the final result is reported using the inliers points of 5 views and the estimated $K$.
+In Fig \ref{fig:relative} the results of relative orientations and orthogonal procrustes analysis are reported to consolidate the results obtained. In Fig \ref{fig:statue} the final result is reported using the concatenation of five close views and the estimated $K$.
 \bigskip
 \bigskip
 \begin{figure}[H]
@@ -276,7 +276,7 @@ In Fig \ref{fig:relative} the results of relative orientations and orthogonal pr
 \end{figure}
 
 \section{Final considerations}
-This project proposed a minimal pipeline to try auto-calibration algorithms. Three algorithms are presented and the problems related to the correct estimation of the fundamental matrices and the initial estimation has been briefly discussed. It is clear that a good initial estimation is necessary and ad-hoc consideration for the optimizations and the number of fundamental matrices are required. Other more advanced methods can be considered like the one proposed in \cite{Gherardi10} to make the entire process more robust and reliable. 
+This project proposed a minimal pipeline to try auto-calibration algorithms. Three algorithms are presented and the problems related to the correct estimation of the fundamental matrices and the initial estimation have been briefly discussed. It is clear that a good initial estimation is necessary and ad-hoc considerations for the optimizations and the number of fundamental matrices are required. Other more advanced methods can be considered like the one proposed in \cite{Gherardi10} to make the entire process more robust and reliable. 
 
 \section{Appendix A: Sample execution of the pipelines}
 \noindent The file \textit{pipeline\_dataset.m} will simply save the cell \textit{S.mat} with the previously explained fields.
