@@ -12,16 +12,17 @@ function [F] = fundamental_matrix(I_left, I_right, left_P, right_P)
 %     imshow(I1);
 %     title('Epipolar Lines in First Image'); hold on;
 %     plot(matchedPoints1(:, 1), matchedPoints1(:, 2), 'go')
-%     epiLines = epipolarLine(F', matchedPoints2(:, :));
-%     points = lineToBorderPoints(epiLines, size(I1));
+%     epiLines = epipolar_line(F', matchedPoints2(:, :));
+%     points = compute_points_from_line(epiLines, size(I1));
 %     line(points(:, [1, 3])', points(:, [2, 4])');
+%     
 %     I2 = imread(I_right);
 %     subplot(212);
 %     imshow(I2);
 %     title('Epipolar Lines in Second Image'); hold on;
 %     plot(matchedPoints2(:, 1), matchedPoints2(:, 2), 'go')
-%     epiLines = epipolarLine(F, matchedPoints1(:, :));
-%     points = lineToBorderPoints(epiLines, size(I2));
+%     epiLines = epipolar_line(F, matchedPoints1(:, :));
+%     points = compute_points_from_line(epiLines, size(I2));
 %     line(points(:, [1, 3])', points(:, [2, 4])');
 %     truesize;
 end
