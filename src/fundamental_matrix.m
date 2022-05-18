@@ -15,7 +15,6 @@ function [F] = fundamental_matrix(I_left, I_right, left_P, right_P)
 %     epiLines = epipolar_line(F', matchedPoints2(:, :));
 %     points = compute_points_from_line(epiLines, size(I1));
 %     line(points(:, [1, 3])', points(:, [2, 4])');
-%     
 %     I2 = imread(I_right);
 %     subplot(212);
 %     imshow(I2);

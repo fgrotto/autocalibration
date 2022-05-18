@@ -44,7 +44,6 @@ fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_kruppas(1,1)-K(1,1))/
 disp('Medonca cipolla (Toolbox): ');
 disp(K_cipolla);
 fprintf('Autocalibration %% error:\t %0.5g \n\n',100*abs(K_cipolla(1,1)-K(1,1))/abs(K(1,1)))
-K_cipolla = K_cipolla_mc;
 
 disp('Computing relative orientations of views');
 for i = 1:5

@@ -1,3 +1,3 @@
 # Minimal Autocalibration Pipeline
 
-The main idea of this project is to present a minimal pipeline to estimate intrinsic camera parameters using auto-calibration methods We will assume known corresponding points and an initial estimation of the intrinsic camera parameters. The entire pipeline is based on the dataset provided by Zephyr, in particular, we used 3DFlow Dante dataset. A detailed reference is provided in the `doc` folder.
+The main idea of this project is to present a minimal pipeline to estimate intrinsic camera parameters using auto-calibration methods. We will assume known corresponding points and an initial estimation of the intrinsic camera parameters. The entire pipeline is based on the dataset provided by Zephyr, in particular, we used 3DFlow Dante dataset. A detailed reference is provided in the `doc` folder.
