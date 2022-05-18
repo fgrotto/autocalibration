@@ -14,6 +14,7 @@
 \usepackage{indentfirst}
 \usepackage{setspace} 
 \usepackage[left=25mm, right=25mm]{geometry}
+\usepackage{hyperref}
 \newtheorem{theorem}{Theorem}
 \onehalfspacing
 
@@ -193,6 +194,7 @@ The implementation of this method is provided in \textit{cost\_kruppas\_method.m
           0  &       0   & 0.0010\\
 \end{bmatrix}
 \end{equation}
+The method was tried as an experiment following the cost function reported in \cite{Pollefeys}. More advanced considerations can be made but they are out of the scope of this report. 
 \newpage
 \subsubsection{Medonca-Cipolla toolbox}
 The last calibration method is provided in the Computer Vision Toolbox from Andrea Fusiello. The main idea is the following theorem from Huang and Faugeras \cite{Faugeras89}
@@ -214,18 +216,44 @@ where $E_{ij} = K'F_{ij}K$ and $w_ij$ are the degree of confidence in the estima
 
 \bigskip
 \subsubsection{Autocalibration considerations}
-As it is visible the auto-calibration algorithms improve the initial estimation based on the fundamental matrices provided. It is important to notice that both the initial estimation and the fundamental matrices play a big role on this estimation and its convergence. Another important considerations is related to the fact that the selecting points close to the mean is mandatory to have a robust estimation. Finally, the non-linear least square solver requires fine tuning to improve the accuracy of auto-calibration algorithms, in particular tolerances.
+As it is visible the auto-calibration algorithms improve the initial estimation based on the fundamental matrices provided. It is important to notice that both the initial estimation and the fundamental matrices play a big role on this estimation and its convergence. Another important considerations is related to the fact that the selecting points close to the mean is mandatory to have a robust estimation. The non-linear least square solver requires fine tuning to improve the accuracy of auto-calibration algorithms, in particular tolerances. Finally, the results obtained by the auto-calibration algorithms are good enough to reach reasonable results as will be presented in the following sections.
 
 \newpage
-\section{Relative orientation and 3D points evaluation}
-Finally the relative orientation for each pair of images $(i,j)$ is recovered using the estimated $K$ with the function provided in the computer vision toolbox. The rotation $R_{ji}$ and translation $t_{ji}$ are saved in the related instance $S{i,j}$. Finally the absolute orientation is recovered using the original 3D points and the triangulated 3D points from corresponding points. The orthogonal procrustes problem (opa) is solved to recover the scaling, the rotation and the translation as follow:
+\subsection{Relative orientation and 3D points evaluation}
+The relative orientation for each pair of images $(i,j)$ is recovered using the estimated $K$ using a linear algorithm and a non-linear refinement. The rotation $R_{ji}$ and translation $t_{ji}$ are saved in the related instance $S\{i,j\}$. To give an idea of the algorithm is to compute the normalized coordinates starting from pixel coordinates, compute the essential matrix using the eight point algorithm and finally use the decomposition of $E$ to obtain the translation and rotation.
+Given $E = UDV^T$ the SVD of E it is possible to compute the following matrices
+\begin{equation}
+    [t]_x = S = U(\pm S')U^T \qquad
+    R = det(UV^T)UR'V^T
+\end{equation}
+\begin{equation}
+    S' = \begin{bmatrix}
+        0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0
+    \end{bmatrix} \qquad
+    R' = \begin{bmatrix}
+        0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1
+    \end{bmatrix} 
+\end{equation}
+Moreover a non-linear refinement can be found in \cite{Horn}.
+Finally, the absolute orientation is recovered using the original 3D points and the triangulated 3D points from corresponding points. The orthogonal procrustes problem (opa) is solved to recover the scaling, the rotation and the translation as follow \cite{Arun}:
 \begin{equation}
     D=s(RM+t)
 \end{equation}
-the actual algorithm is not reported and can be found in th CV toolbox. Another possibility is to concatenate the relative orientation of each view with respect to the first one, triangulate the points and register them with iterative closest point algorithm (icp). However, the latter approach is not as robust as solving opa, it is computationally more expensive and it is not always possible to concatenate close views due to missing common points to compute the fundamental matrices.
-
+To give an idea of the orthogonal procrustes analysis algorithm we have to consider the following three steps. The first step is about getting the value of $R$:
+\begin{equation}
+    R = V\begin{bmatrix}
+        1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & det(VU^{T})
+    \end{bmatrix} U^{T} \qquad UDV^{T} = svd(\bar{y}\bar{x}^T)
+\end{equation}
+where $\bar{x}$ and $\bar{y}$ are centralized coordinates of $D$ and $M$.
+Secondly, it is necessary to compute the scale and the translation:
+\begin{equation}
+    s = \frac{||\bar{y}||}{||\bar{x}||} \qquad t=\left(\frac{D}{s} - RM\right)
+\end{equation}
+In this way we have computed all the necessary steps. Another possibility, without using the absolute orientation, is to concatenate the relative orientation of each view with respect to the first one, triangulate the points and register them with iterative closest point algorithm. However, the latter approach is not as robust as opa, it is computationally more expensive and it is not always possible to concatenate close views due to missing common points to compute the fundamental matrices.
+In Fig \ref{fig:relative} the results of relative orientations and orthogonal procrustes analysis are reported to consolidate the results obtained. In Fig \ref{fig:statue} the final result is reported using the inliers points of 5 views and the estimated $K$.
 \bigskip
-In Fig \ref{fig:relative} the results of relative orientations and opa are reported to check the results obtained. In Fig \ref{fig:statue} the final result is reported using the inliers points of 5 views and the estimated $K$.
+\bigskip
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.45]{images/relative_1.eps}
@@ -234,15 +262,16 @@ In Fig \ref{fig:relative} the results of relative orientations and opa are repor
     \qquad
     \includegraphics[scale=0.45]{images/relative_3.eps}
     \includegraphics[scale=0.45]{images/relative_4.eps}
-    \caption{Example of orientations with OPA of the 3D points of the model and the computed ones. The considered views are reported in the images.}
+    \caption{Example of relative orientations with OPA of the 3D points of the model and the computed ones. The considered views are reported in the images.}
     \label{fig:relative}
 \end{figure}
 
 \begin{figure}[H]
     \centering
+    \textbf{Dante Statue: Final result}\par\medskip
     \hspace*{-7cm}
     \includegraphics[scale=0.65]{images/statue.eps}
-    \caption{Final result using 5 views}
+    \caption{Final result using the 3D points obtained by 5 concatenated views. In blue the model and in red our projections. Our projections are not perfect but good enough to define the structure of the statue. This confirms the validity of the auto-calibration algorithms even though the computation time of the entire pipeline is not negligible (several minutes).}
     \label{fig:statue}
 \end{figure}
 
@@ -428,6 +457,8 @@ This project proposed a minimal pipeline to try auto-calibration algorithms. Thr
     \bibitem{Fusiello} Andrea Fusiello Visione computazionale. Tecniche di ricostruzione tridimensionale
     \bibitem{Luong} Luong Q.-T.; Faugeras O. D. (1996). The fundamental matrix: Theory, algorithms, and stability analysis.
     \bibitem{Pollefeys} M. Pollefeys and L.V. Gool Stratified Self-Calibration with the Modulus Constraint
+    \bibitem{Arun} Arun K. S.; Huang T. S.; Blostein S. D. (1987). Least-Squares Fitting of Two 3-D Point Sets.
+    \bibitem{Horn} Horn B. (1990). Relative orientation.
 \end{thebibliography}
 
 \end{document}
