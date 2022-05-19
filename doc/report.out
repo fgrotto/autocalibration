@@ -5,9 +5,9 @@
 \BOOKMARK [2][-]{subsection.2.3}{Fundamental Matrices}{section.2}% 5
 \BOOKMARK [2][-]{subsection.2.4}{Epipolar lines}{section.2}% 6
 \BOOKMARK [2][-]{subsection.2.5}{Autocalibration}{section.2}% 7
-\BOOKMARK [3][-]{subsubsection.2.5.1}{Medonca-Cipolla autocalibration}{subsection.2.5}% 8
-\BOOKMARK [3][-]{subsubsection.2.5.2}{Kruppa method autocalibration}{subsection.2.5}% 9
-\BOOKMARK [3][-]{subsubsection.2.5.3}{Medonca-Cipolla toolbox}{subsection.2.5}% 10
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Medonca-Cipolla autocalibration method}{subsection.2.5}% 8
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Kruppa autocalibration method}{subsection.2.5}% 9
+\BOOKMARK [3][-]{subsubsection.2.5.3}{Medonca-Cipolla autocalibration method toolbox}{subsection.2.5}% 10
 \BOOKMARK [3][-]{subsubsection.2.5.4}{Autocalibration considerations}{subsection.2.5}% 11
 \BOOKMARK [2][-]{subsection.2.6}{Relative orientation and 3D points evaluation}{section.2}% 12
 \BOOKMARK [1][-]{section.3}{Final considerations}{}% 13

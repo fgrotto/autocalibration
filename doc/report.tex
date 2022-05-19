@@ -133,7 +133,7 @@ in fact if we consider $m$, the epipolar line is $Fm$. In Fig \ref{fig:epipolar}
 
 
 \subsection{Autocalibration}
-Given the fundamental matrices the auto-calibration algorithms require an initial estimation of the matrix $K_0$ of internal camera parameters. A simple script is provided in \textit{compute\_k0.m} which extract the intrinsic camera parameters from the size of the image and the header information assuming a $35$mm focal length. An example of initial estimation is reported:
+Given the fundamental matrices the auto-calibration algorithms require an initial estimation of the matrix $K_0$ of internal camera parameters. A simple script is provided in \textit{compute\_k0.m} which extract the intrinsic camera parameters from the size of the images and the header information containing the \textit{DigitalCamera} field. An example of initial estimation is reported:
 \begin{equation*}
 K_0 = 1000 \begin{bmatrix}
     5.9410   &      0   & 2.7360\\
@@ -150,7 +150,7 @@ which is very close to the original values computed in Zephyr:
           0  &       0  &  0.0010\\
         \end{bmatrix}
     \end{equation*}
-\subsubsection{Medonca-Cipolla autocalibration}
+\subsubsection{Medonca-Cipolla autocalibration method}
 A first simple calibration method was proposed by Medonca and Cipolla in \cite{Medonca99}. Considering the intrinsic parameters parametrized as
 \begin{equation}
     K = \begin{bmatrix}
@@ -177,7 +177,7 @@ The implementation of this method is provided in \textit{cost\_medonca\_cipolla.
           0  &       0  &  0.0010\\ 
 \end{bmatrix}
 \end{equation}
-\subsubsection{Kruppa method autocalibration}
+\subsubsection{Kruppa autocalibration method}
 The second calibration method proposed is Kruppa method that can be found in \cite{Prapitasari14} \cite{Pollefeys}. From the classical Kruppa's equations, a cost function can be derived to be solved as a nonlinear least-squares optimization problem:
 \begin{equation}
     C(K_i, i = 1,\dots, n) = \sum_{ij}^{n} \norm{\frac{F_{ij}w^{-1}F_{ij}^T}{||F_{ij}w^{-1}F_{ij}^T||} - \frac{[e_{ji}]_xw^{-1}[e_{ji}]^T}{||[e_{ji}]_xw^{-1}[e_{ji}]^T||}}
@@ -196,7 +196,7 @@ The implementation of this method is provided in \textit{cost\_kruppas\_method.m
 \end{equation}
 This method was considered as an experiment following the cost function reported in \cite{Pollefeys}. More advanced considerations can be made but they are out of the scope of this report. 
 \newpage
-\subsubsection{Medonca-Cipolla toolbox}
+\subsubsection{Medonca-Cipolla autocalibration method toolbox}
 The last calibration method is provided in the Computer Vision Toolbox from Andrea Fusiello. The main idea is the following theorem from Huang and Faugeras \cite{Faugeras89}
 \begin{equation}
     det(E) = 0 \qquad \text{and} \qquad tr((EE^T))^2 - 2 tr((EE^T)^2) = 0
